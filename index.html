@@ -146,11 +146,19 @@
         }
 
         // --- TWITTER (PKCE Implementation) ---
-        const TWITTER_CLIENT_ID = "M8F1K3Bp6aYfGQoORqAi2tP3Q";
+        const TWITTER_CLIENT_ID = "SlFnLVdPQzcxTHQwU0NCMVBsRVE6MTpjaQ";
         const TWITTER_REDIRECT_URI = "https://mock-frontend-one.vercel.app/";
 
+        function showResult(title, data) {
+            const resDiv = document.getElementById("result");
+            resDiv.style.display = "block";
+            resDiv.innerHTML =
+                `<strong>${title}</strong><br><pre>${JSON.stringify(data, null, 2)}</pre>`;
+        }
+
         function generateRandomString(length) {
-            const charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~";
+            const charset =
+                "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~";
             let result = "";
             for (let i = 0; i < length; i++) {
                 result += charset.charAt(Math.floor(Math.random() * charset.length));
@@ -161,48 +169,92 @@
         async function generateCodeChallenge(codeVerifier) {
             const encoder = new TextEncoder();
             const data = encoder.encode(codeVerifier);
-            const digest = await window.crypto.subtle.digest('SHA-256', data);
-            // Base64URL encode
+            const digest = await window.crypto.subtle.digest("SHA-256", data);
+
             return btoa(String.fromCharCode(...new Uint8Array(digest)))
-                .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+                .replace(/\+/g, "-")
+                .replace(/\//g, "_")
+                .replace(/=+$/, "");
         }
 
         async function startTwitterAuth() {
-            // 1. Generate Verifier & Challenge
+
+            console.log("Starting Twitter OAuth...");
+
             const codeVerifier = generateRandomString(128);
-            localStorage.setItem('twitter_code_verifier', codeVerifier);
+            localStorage.setItem("twitter_code_verifier", codeVerifier);
+
+            console.log("Code Verifier:", codeVerifier);
+
             const codeChallenge = await generateCodeChallenge(codeVerifier);
 
-            // 2. Redirect User
-            const authUrl = `https://twitter.com/i/oauth2/authorize?response_type=code&client_id=${TWITTER_CLIENT_ID}&redirect_uri=${TWITTER_REDIRECT_URI}&scope=users.read%20tweet.read&state=state123&code_challenge=${codeChallenge}&code_challenge_method=S256`;
+            console.log("Code Challenge:", codeChallenge);
+
+            const authUrl =
+                `https://twitter.com/i/oauth2/authorize` +
+                `?response_type=code` +
+                `&client_id=${TWITTER_CLIENT_ID}` +
+                `&redirect_uri=${encodeURIComponent(TWITTER_REDIRECT_URI)}` +
+                `&scope=users.read%20tweet.read` +
+                `&state=debug123` +
+                `&code_challenge=${codeChallenge}` +
+                `&code_challenge_method=S256`;
+
+            console.log("Authorization URL:");
+            console.log(authUrl);
+
             window.location.href = authUrl;
         }
 
-        // --- TWITTER CALLBACK LISTENER ---
-        // If the page loads with ?code=... in the URL, that means Twitter redirected back here!
         window.onload = async () => {
+
+            console.log("Page loaded");
+
             const params = new URLSearchParams(window.location.search);
-            const code = params.get('code');
 
-            if (code) {
-                const codeVerifier = localStorage.getItem('twitter_code_verifier');
-                history.replaceState(null, '', window.location.pathname); // Clean URL
+            const code = params.get("code");
+            const state = params.get("state");
 
-                try {
-                    const res = await fetch(`${API_URL}/auth/oauth/twitter`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            code: code,
-                            codeVerifier: codeVerifier,
-                            redirectUri: TWITTER_REDIRECT_URI
-                        })
-                    });
-                    const data = await res.json();
-                    showResult('Twitter OAuth Result', data);
-                } catch (err) {
-                    showResult('Error', err);
-                }
+            console.log("URL params:", window.location.search);
+            console.log("Code:", code);
+            console.log("State:", state);
+
+            if (!code) {
+                console.log("No OAuth code found");
+                return;
+            }
+
+            const codeVerifier = localStorage.getItem("twitter_code_verifier");
+
+            console.log("Stored verifier:", codeVerifier);
+
+            try {
+
+                console.log("Sending code to backend...");
+
+                const res = await fetch(`${API_URL}/auth/oauth/twitter`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        code: code,
+                        codeVerifier: codeVerifier,
+                        redirectUri: TWITTER_REDIRECT_URI
+                    })
+                });
+
+                const data = await res.json();
+
+                console.log("Backend response:", data);
+
+                showResult("Twitter OAuth Result", data);
+
+            } catch (err) {
+
+                console.error("OAuth error:", err);
+
+                showResult("Error", err);
             }
         };
     </script>
