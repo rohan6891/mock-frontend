@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Krabets Complete OAuth Email</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0f1f33;
+            --bg-2: #14355a;
+            --panel: rgba(10, 24, 42, 0.8);
+            --ink: #ecf6ff;
+            --muted: #9bb6d5;
+            --stroke: rgba(182, 210, 245, 0.22);
+            --ok: #66e1aa;
+            --warn: #f2bf66;
+            --danger: #ff8d8d;
+            --teal: #2cccb3;
+            --blue: #3578f6;
+            --cyan: #56c8ff;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            color: var(--ink);
+            font-family: "Bricolage Grotesque", sans-serif;
+            background:
+                radial-gradient(1000px 500px at 85% -20%, rgba(86, 200, 255, 0.24), transparent 60%),
+                radial-gradient(900px 420px at -18% 0%, rgba(44, 204, 179, 0.2), transparent 62%),
+                linear-gradient(155deg, var(--bg), var(--bg-2));
+            padding: 22px;
+        }
+
+        .wrap {
+            width: min(850px, 100%);
+            margin: 0 auto;
+        }
+
+        .links {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+
+        .link {
+            border: 1px solid var(--stroke);
+            color: #d4e7ff;
+            text-decoration: none;
+            border-radius: 999px;
+            padding: 7px 11px;
+            font: 700 12px/1 "Space Mono", monospace;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            background: rgba(8, 15, 28, 0.5);
+        }
+
+        .card {
+            background: var(--panel);
+            border: 1px solid var(--stroke);
+            border-radius: 18px;
+            padding: 20px;
+            backdrop-filter: blur(8px);
+        }
+
+        h1 {
+            margin: 0 0 8px;
+            font-size: clamp(1.4rem, 2.5vw, 2.1rem);
+        }
+
+        p { margin: 0; color: var(--muted); }
+
+        label {
+            display: block;
+            margin: 12px 0 6px;
+            color: #c6d8f2;
+            font-size: 0.92rem;
+        }
+
+        input {
+            width: 100%;
+            border: 1px solid rgba(196, 219, 250, 0.24);
+            border-radius: 12px;
+            background: rgba(8, 14, 26, 0.78);
+            color: var(--ink);
+            padding: 11px 12px;
+            font: 500 0.94rem/1 "Space Mono", monospace;
+            outline: none;
+        }
+
+        input:focus { border-color: var(--cyan); }
+
+        .row {
+            margin-top: 12px;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            border: 0;
+            border-radius: 11px;
+            padding: 10px 12px;
+            cursor: pointer;
+            color: #eff7ff;
+            font: 700 0.83rem/1 "Space Mono", monospace;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .btn-main { background: linear-gradient(135deg, var(--teal), var(--blue)); }
+        .btn-ghost { background: transparent; border: 1px solid rgba(180, 207, 245, 0.32); }
+
+        .status {
+            margin-top: 12px;
+            min-height: 48px;
+            border: 1px solid rgba(189, 211, 243, 0.2);
+            border-radius: 12px;
+            padding: 10px 11px;
+            font: 0.84rem/1.45 "Space Mono", monospace;
+            color: #d6e5fb;
+            background: rgba(8, 14, 24, 0.72);
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .ok { border-color: rgba(102, 225, 170, 0.55); }
+        .warn { border-color: rgba(242, 191, 102, 0.56); }
+        .danger { border-color: rgba(255, 141, 141, 0.62); }
+
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+    <main class="wrap">
+        <nav class="links">
+            <a class="link" href="./index.html">OAuth + 2FA</a>
+            <a class="link" href="./email-auth.html">Email Auth</a>
+            <a class="link" href="./password-reset.html">Reset Password</a>
+            <a class="link" href="./oauth-complete-email.html">Complete OAuth Email</a>
+            <a class="link" href="./dashboard.html">Dashboard</a>
+        </nav>
+
+        <section class="card">
+            <h1>Complete OAuth Signup</h1>
+            <p>Your OAuth login succeeded, but we do not have your email yet. Add it once and continue. This route auto-marks email verified for OAuth accounts.</p>
+
+            <label for="apiBase">API Base URL</label>
+            <input id="apiBase" value="http://localhost:4000/api/v1" />
+
+            <label for="email">Email</label>
+            <input id="email" placeholder="you@example.com" />
+
+            <div class="row">
+                <button class="btn btn-main" id="saveBtn">Save Email</button>
+                <button class="btn btn-ghost" id="dashboardBtn">Go Dashboard</button>
+            </div>
+
+            <section id="setupPanel" class="hidden" style="margin-top: 12px;">
+                <p style="margin-bottom: 8px; color: var(--muted);">Email saved. Setup 2FA now (recommended) or skip and do it later.</p>
+                <div class="row">
+                    <button class="btn btn-main" id="start2faBtn">Setup 2FA Now</button>
+                    <button class="btn btn-ghost" id="skip2faBtn">Skip For Now</button>
+                </div>
+
+                <div id="setupBox" class="hidden" style="margin-top: 10px;">
+                    <div id="setupDetails" class="status"></div>
+                    <label for="setupCode">Authenticator Code</label>
+                    <input id="setupCode" maxlength="6" placeholder="6-digit code" />
+                    <div class="row">
+                        <button class="btn btn-main" id="verify2faBtn">Verify and Enable 2FA</button>
+                    </div>
+                </div>
+            </section>
+
+            <div id="status" class="status">Waiting for input...</div>
+        </section>
+    </main>
+
+    <script>
+        const statusEl = document.getElementById('status');
+        const apiBaseEl = document.getElementById('apiBase');
+        const setupPanelEl = document.getElementById('setupPanel');
+        const setupBoxEl = document.getElementById('setupBox');
+        const setupDetailsEl = document.getElementById('setupDetails');
+
+        function apiBase() {
+            return apiBaseEl.value.trim().replace(/\/$/, '');
+        }
+
+        function setStatus(msg, type) {
+            statusEl.className = `status ${type || ''}`.trim();
+            statusEl.textContent = msg;
+        }
+
+        function loadSession() {
+            const raw = localStorage.getItem('krabets_session');
+            if (!raw) return null;
+            try {
+                return JSON.parse(raw);
+            } catch {
+                return null;
+            }
+        }
+
+        async function updateSessionUser(partialUser) {
+            const session = loadSession();
+            if (!session) return;
+            session.user = {
+                ...(session.user || {}),
+                ...(partialUser || {}),
+            };
+            localStorage.setItem('krabets_session', JSON.stringify(session));
+        }
+
+        document.getElementById('saveBtn').addEventListener('click', async () => {
+            const session = loadSession();
+            const email = document.getElementById('email').value.trim().toLowerCase();
+
+            if (!session?.token) {
+                setStatus('No logged-in OAuth session found. Login first from OAuth page.', 'danger');
+                return;
+            }
+
+            if (!email) {
+                setStatus('Email is required.', 'danger');
+                return;
+            }
+
+            setStatus('Saving email...', 'warn');
+            const res = await fetch(`${apiBase()}/auth/oauth/complete-email`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${session.token}`,
+                },
+                body: JSON.stringify({ email }),
+            });
+            const data = await res.json();
+
+            if (!res.ok) {
+                setStatus(`Save email failed:\n${JSON.stringify(data, null, 2)}`, 'danger');
+                return;
+            }
+
+            await updateSessionUser(data.user || { email });
+            setupPanelEl.classList.remove('hidden');
+            setStatus('Email saved successfully. You can setup 2FA now or skip for now.', 'ok');
+        });
+
+        document.getElementById('start2faBtn').addEventListener('click', async () => {
+            const session = loadSession();
+            if (!session?.token) {
+                setStatus('No active session found.', 'danger');
+                return;
+            }
+
+            setStatus('Requesting 2FA setup...', 'warn');
+            const res = await fetch(`${apiBase()}/2fa/setup`, {
+                method: 'POST',
+                headers: {
+                    Authorization: `Bearer ${session.token}`,
+                },
+            });
+            const data = await res.json();
+
+            if (!res.ok) {
+                setStatus(`2FA setup failed:\n${JSON.stringify(data, null, 2)}`, 'danger');
+                return;
+            }
+
+            setupBoxEl.classList.remove('hidden');
+            setupDetailsEl.textContent = `Secret: ${data.secret}\n\nQR (data url):\n${data.qrCodeUrl || '-'}`;
+            setStatus('2FA setup created. Scan secret/QR and verify with current code.', 'ok');
+        });
+
+        document.getElementById('verify2faBtn').addEventListener('click', async () => {
+            const session = loadSession();
+            const code = document.getElementById('setupCode').value.trim();
+            if (!session?.token) {
+                setStatus('No active session found.', 'danger');
+                return;
+            }
+
+            setStatus('Verifying 2FA setup...', 'warn');
+            const res = await fetch(`${apiBase()}/2fa/verify`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${session.token}`,
+                },
+                body: JSON.stringify({ code }),
+            });
+            const data = await res.json();
+
+            if (!res.ok) {
+                setStatus(`2FA verify failed:\n${JSON.stringify(data, null, 2)}`, 'danger');
+                return;
+            }
+
+            setStatus('2FA enabled successfully. Redirecting to dashboard...', 'ok');
+            setTimeout(() => {
+                window.location.href = './dashboard.html';
+            }, 500);
+        });
+
+        document.getElementById('skip2faBtn').addEventListener('click', () => {
+            window.location.href = './dashboard.html';
+        });
+
+        document.getElementById('dashboardBtn').addEventListener('click', () => {
+            window.location.href = './dashboard.html';
+        });
+    </script>
+</body>
+</html>

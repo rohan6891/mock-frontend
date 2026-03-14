@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Krabets Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #061a2a;
+            --bg-2: #0f2e48;
+            --panel: rgba(9, 24, 40, 0.78);
+            --ink: #ecf6ff;
+            --muted: #9db8d7;
+            --stroke: rgba(174, 210, 248, 0.22);
+            --teal: #29d4b8;
+            --cyan: #7ee8ff;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            color: var(--ink);
+            font-family: "Bricolage Grotesque", sans-serif;
+            background:
+                radial-gradient(900px 500px at 5% -10%, rgba(41, 212, 184, 0.24), transparent 58%),
+                radial-gradient(1100px 550px at 95% -16%, rgba(126, 232, 255, 0.24), transparent 60%),
+                linear-gradient(140deg, var(--bg), var(--bg-2));
+            padding: 26px;
+        }
+
+        .wrap {
+            width: min(1000px, 100%);
+            margin: 0 auto;
+            animation: rise 500ms ease-out;
+        }
+
+        @keyframes rise {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: clamp(1.5rem, 2.6vw, 2.2rem);
+        }
+
+        .btn {
+            border: 1px solid var(--stroke);
+            background: rgba(10, 24, 40, 0.6);
+            color: var(--ink);
+            border-radius: 12px;
+            padding: 10px 14px;
+            cursor: pointer;
+            font: 700 0.85rem/1 "Space Mono", monospace;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .btn:hover {
+            border-color: rgba(126, 232, 255, 0.62);
+        }
+
+        .card {
+            background: var(--panel);
+            border: 1px solid var(--stroke);
+            border-radius: 22px;
+            padding: 24px;
+            box-shadow: 0 24px 55px rgba(3, 10, 20, 0.38);
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 24px;
+            backdrop-filter: blur(9px);
+        }
+
+        .avatar {
+            width: 180px;
+            height: 180px;
+            border-radius: 18px;
+            object-fit: cover;
+            border: 2px solid rgba(126, 232, 255, 0.5);
+            background: #11253a;
+        }
+
+        .heading {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+
+        .pill {
+            border-radius: 999px;
+            border: 1px solid rgba(126, 232, 255, 0.5);
+            color: #d8fbff;
+            padding: 6px 10px;
+            font: 700 0.72rem/1 "Space Mono", monospace;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            background: rgba(126, 232, 255, 0.12);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(140px, 1fr));
+            gap: 10px;
+        }
+
+        .item {
+            border: 1px solid rgba(188, 214, 244, 0.2);
+            border-radius: 12px;
+            padding: 10px;
+            background: rgba(7, 16, 29, 0.6);
+        }
+
+        .k {
+            display: block;
+            margin-bottom: 4px;
+            color: var(--muted);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .v {
+            font-family: "Space Mono", monospace;
+            font-size: 0.87rem;
+            word-break: break-word;
+        }
+
+        .muted {
+            color: var(--muted);
+        }
+
+        .empty {
+            border: 1px dashed rgba(157, 184, 215, 0.42);
+            border-radius: 14px;
+            padding: 22px;
+            text-align: center;
+            color: var(--muted);
+        }
+
+        @media (max-width: 860px) {
+            .card {
+                grid-template-columns: 1fr;
+            }
+
+            .avatar {
+                width: 140px;
+                height: 140px;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="wrap">
+        <div class="top">
+            <h1>Dashboard</h1>
+            <button class="btn" id="logoutBtn">Logout</button>
+        </div>
+
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
+            <a href="./index.html" style="color:#d4e7ff;text-decoration:none;border:1px solid var(--stroke);border-radius:999px;padding:7px 11px;font:700 12px/1 'Space Mono', monospace;letter-spacing:0.06em;text-transform:uppercase;background:rgba(8,15,28,0.5);">OAuth + 2FA</a>
+            <a href="./email-auth.html" style="color:#d4e7ff;text-decoration:none;border:1px solid var(--stroke);border-radius:999px;padding:7px 11px;font:700 12px/1 'Space Mono', monospace;letter-spacing:0.06em;text-transform:uppercase;background:rgba(8,15,28,0.5);">Email Auth</a>
+            <a href="./password-reset.html" style="color:#d4e7ff;text-decoration:none;border:1px solid var(--stroke);border-radius:999px;padding:7px 11px;font:700 12px/1 'Space Mono', monospace;letter-spacing:0.06em;text-transform:uppercase;background:rgba(8,15,28,0.5);">Reset Password</a>
+            <a href="./oauth-complete-email.html" style="color:#d4e7ff;text-decoration:none;border:1px solid var(--stroke);border-radius:999px;padding:7px 11px;font:700 12px/1 'Space Mono', monospace;letter-spacing:0.06em;text-transform:uppercase;background:rgba(8,15,28,0.5);">Complete OAuth Email</a>
+        </div>
+
+        <div id="root"></div>
+    </main>
+
+    <script>
+        function escapeHtml(value) {
+            return String(value || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        function fallbackAvatar(username) {
+            const label = encodeURIComponent(username || 'KR');
+            return `https://ui-avatars.com/api/?name=${label}&background=0F2E48&color=ECF6FF&size=256`;
+        }
+
+        function renderSession() {
+            const root = document.getElementById('root');
+            const raw = localStorage.getItem('krabets_session');
+
+            if (!raw) {
+                root.innerHTML = `
+                    <div class="empty">
+                        No active session found. Return to <a href="./index.html" class="muted">login page</a>.
+                    </div>
+                `;
+                return;
+            }
+
+            let parsed;
+            try {
+                parsed = JSON.parse(raw);
+            } catch {
+                root.innerHTML = `
+                    <div class="empty">
+                        Session data is corrupted. Please <a href="./index.html" class="muted">login again</a>.
+                    </div>
+                `;
+                return;
+            }
+
+            const user = parsed.user || {};
+            const payload = user.jwtPayload || {};
+            const avatar = user.avatarUrl || fallbackAvatar(user.username);
+
+            root.innerHTML = `
+                <section class="card">
+                    <img class="avatar" src="${escapeHtml(avatar)}" alt="Profile picture" />
+
+                    <div>
+                        <div class="heading">
+                            <h2 style="margin: 0; font-size: 1.6rem;">${escapeHtml(user.username || 'Unknown User')}</h2>
+                            <span class="pill">${escapeHtml(user.provider || 'email')}</span>
+                        </div>
+
+                        <p class="muted" style="margin: 0 0 14px;">Authenticated successfully. This card is populated from your login response + token payload.</p>
+
+                        <div class="grid">
+                            <div class="item">
+                                <span class="k">User ID</span>
+                                <span class="v">${escapeHtml(user.id || '-')}</span>
+                            </div>
+                            <div class="item">
+                                <span class="k">Email</span>
+                                <span class="v">${escapeHtml(user.email || payload.email || '-')}</span>
+                            </div>
+                            <div class="item">
+                                <span class="k">JWT Subject</span>
+                                <span class="v">${escapeHtml(payload.sub || '-')}</span>
+                            </div>
+                            <div class="item">
+                                <span class="k">Issued At</span>
+                                <span class="v">${payload.iat ? new Date(payload.iat * 1000).toLocaleString() : '-'}</span>
+                            </div>
+                            <div class="item">
+                                <span class="k">Expires At</span>
+                                <span class="v">${payload.exp ? new Date(payload.exp * 1000).toLocaleString() : '-'}</span>
+                            </div>
+                            <div class="item">
+                                <span class="k">Token Preview</span>
+                                <span class="v">${escapeHtml((parsed.token || '').slice(0, 28))}...</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            `;
+        }
+
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            localStorage.removeItem('krabets_session');
+            window.location.href = './index.html';
+        });
+
+        renderSession();
+    </script>
+</body>
+</html>

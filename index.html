@@ -1,212 +1,679 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Krabets OAuth Testing</title>
+    <title>Krabets Auth Lab</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background: #fdfdfd;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
+        :root {
+            --bg: #0f1b2d;
+            --bg-2: #152844;
+            --ink: #ebf3ff;
+            --muted: #a8b7ce;
+            --panel: rgba(10, 20, 35, 0.72);
+            --stroke: rgba(182, 210, 248, 0.2);
+            --ok: #5de4a8;
+            --warn: #f6bf69;
+            --danger: #ff7a7a;
+            --cyan: #4bc6ff;
+            --teal: #1ab4a1;
+            --blue: #3478f6;
+            --shadow: 0 26px 60px rgba(3, 8, 18, 0.45);
         }
 
-        .container {
-            text-align: center;
-            border: 1px solid #ddd;
-            padding: 40px;
-            border-radius: 12px;
-            background: white;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            width: 350px;
-        }
-
-        h2 {
-            margin-top: 0;
-            color: #333;
-        }
-
-        .btn {
-            display: block;
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            border: none;
-            border-radius: 6px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            color: white;
-            text-decoration: none;
+        * {
             box-sizing: border-box;
         }
 
-        .btn-google {
-            background: #db4437;
+        body {
+            margin: 0;
+            min-height: 100vh;
+            color: var(--ink);
+            font-family: "Bricolage Grotesque", sans-serif;
+            background:
+                radial-gradient(1200px 550px at 82% -14%, rgba(75, 198, 255, 0.32), transparent 58%),
+                radial-gradient(950px 420px at -14% 0%, rgba(26, 180, 161, 0.22), transparent 63%),
+                linear-gradient(155deg, var(--bg), var(--bg-2));
+            padding: 24px;
+            animation: breathe-in 620ms ease-out;
         }
 
-        .btn-twitter {
-            background: #1da1f2;
+        @keyframes breathe-in {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        .btn-telegram {
-            background: #0088cc;
+        .shell {
+            width: min(1100px, 100%);
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 20px;
         }
 
-        #result {
-            margin-top: 20px;
-            font-size: 14px;
-            color: #555;
-            word-wrap: break-word;
-            text-align: left;
-            background: #f4f4f4;
-            padding: 10px;
-            border-radius: 6px;
-            display: none;
+        .top-nav {
+            width: min(1100px, 100%);
+            margin: 0 auto 12px;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .top-link {
+            border: 1px solid var(--stroke);
+            color: #d4e7ff;
+            text-decoration: none;
+            border-radius: 999px;
+            padding: 7px 11px;
+            font: 700 12px/1 "Space Mono", monospace;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            background: rgba(8, 15, 28, 0.5);
+        }
+
+        .card {
+            background: var(--panel);
+            border: 1px solid var(--stroke);
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(8px);
+            overflow: hidden;
+        }
+
+        .hero {
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            width: 340px;
+            height: 340px;
+            border-radius: 50%;
+            top: -180px;
+            right: -90px;
+            background: radial-gradient(circle, rgba(75, 198, 255, 0.28), transparent 70%);
+        }
+
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font: 700 12px/1 "Space Mono", monospace;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #d9f4ff;
+            border: 1px solid rgba(139, 227, 255, 0.32);
+            border-radius: 999px;
+            padding: 8px 12px;
+            background: rgba(75, 198, 255, 0.12);
+        }
+
+        h1 {
+            margin: 14px 0 10px;
+            font-size: clamp(1.8rem, 3vw, 2.5rem);
+            line-height: 1.1;
+        }
+
+        p {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.55;
+        }
+
+        .panel {
+            padding: 26px;
+            border-top: 1px solid var(--stroke);
+        }
+
+        .panel h2 {
+            margin: 0 0 14px;
+            font-size: 1.15rem;
+        }
+
+        .row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        label {
+            display: block;
+            margin: 12px 0 6px;
+            color: #c6d7ee;
+            font-size: 0.93rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 12px;
+            border: 1px solid rgba(197, 220, 251, 0.24);
+            background: rgba(7, 13, 26, 0.76);
+            color: var(--ink);
+            font: 500 0.98rem/1 "Space Mono", monospace;
+            outline: none;
+            transition: border-color 120ms ease;
+        }
+
+        input:focus {
+            border-color: var(--cyan);
+        }
+
+        .btn {
+            border: 0;
+            border-radius: 12px;
+            padding: 11px 14px;
+            color: #eff7ff;
+            cursor: pointer;
+            font: 700 0.9rem/1 "Space Mono", monospace;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            transition: transform 140ms ease, box-shadow 140ms ease, opacity 140ms ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-google { background: #db4437; }
+        .btn-twitter { background: #1d9bf0; }
+        .btn-telegram { background: #229ed9; }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--teal), var(--blue));
+            box-shadow: 0 10px 20px rgba(29, 138, 223, 0.27);
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid rgba(179, 207, 244, 0.35);
+        }
+
+        .status {
+            margin-top: 16px;
+            padding: 13px 14px;
+            border-radius: 12px;
+            border: 1px solid rgba(184, 208, 241, 0.2);
+            background: rgba(7, 14, 26, 0.74);
+            min-height: 46px;
+            color: #d2e4fd;
+            font-family: "Space Mono", monospace;
+            font-size: 0.88rem;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .status.ok { border-color: rgba(93, 228, 168, 0.5); }
+        .status.warn { border-color: rgba(246, 191, 105, 0.5); }
+        .status.danger { border-color: rgba(255, 122, 122, 0.55); }
+
+        .hidden { display: none; }
+
+        .mini {
+            margin-top: 6px;
+            font-size: 0.82rem;
+            color: #95abc7;
+        }
+
+        .qr {
+            width: 140px;
+            height: 140px;
+            border-radius: 12px;
+            border: 1px solid var(--stroke);
+            background: #fff;
+            margin-top: 10px;
+            object-fit: cover;
+        }
+
+        @media (max-width: 980px) {
+            .shell {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
-    <!-- Google Identity Services Script -->
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
-
 <body>
+    <nav class="top-nav">
+        <a class="top-link" href="./index.html">OAuth + 2FA</a>
+        <a class="top-link" href="./email-auth.html">Email Auth</a>
+        <a class="top-link" href="./password-reset.html">Reset Password</a>
+        <a class="top-link" href="./oauth-complete-email.html">Complete OAuth Email</a>
+        <a class="top-link" href="./dashboard.html">Dashboard</a>
+    </nav>
 
-    <div class="container">
-        <h2>Login to Krabets</h2>
+    <main class="shell">
+        <section class="card">
+            <div class="hero">
+                <span class="tag">Krabets Auth Lab</span>
+                <h1>OAuth Login + 2FA Setup Playground</h1>
+                <p>Login with Google, Twitter, or Telegram. If your backend returns <code>requires2FA</code>, complete TOTP and continue. If not, optionally enable 2FA and then move to dashboard.</p>
+            </div>
 
-        <!-- Google Login -->
-        <div id="g_id_onload" data-client_id="997497031497-n79hhte5cb9au9o6eeovkpjlpkm00qom.apps.googleusercontent.com"
-            data-context="signin" data-ux_mode="popup" data-callback="handleGoogleResponse" data-auto_prompt="false">
-        </div>
-        <div class="g_id_signin" data-type="standard" data-shape="rectangular" data-theme="outline"
-            data-text="signin_with" data-size="large" data-logo_alignment="left"
-            style="margin-bottom: 10px; display: flex; justify-content: center;">
-        </div>
+            <div class="panel">
+                <h2>Config</h2>
+                <label for="apiBase">API Base URL</label>
+                <input id="apiBase" value="https://anthropometrical-unrepined-elvie.ngrok-free.dev/api/v1" />
 
-        <!-- Twitter Login -->
-        <button class="btn btn-twitter" onclick="startTwitterAuth()">Login with Twitter (X)</button>
+                <label for="googleClientId">Google Client ID (for widget)</label>
+                <input id="googleClientId" value="997497031497-n79hhte5cb9au9o6eeovkpjlpkm00qom.apps.googleusercontent.com" placeholder="Paste your Google OAuth client id" />
+                <p class="mini">Google callback posts <code>{ idToken }</code> to <code>/auth/oauth/google</code>.</p>
 
-        <!-- Telegram Login Widget -->
-        <div style="margin-top: 15px; display: flex; justify-content: center;">
-            <script async src="https://telegram.org/js/telegram-widget.js?22" data-telegram-login="Krabet_bot"
-                data-size="large" data-onauth="onTelegramAuth(user)"
-                data-auth-url="https://anthropometrical-unrepined-elvie.ngrok-free.dev"
-                data-request-access="write"></script>
-        </div>
-        <p style="font-size: 12px; color: #888;">Note: You must setup the Bot domain using /setdomain in BotFather to
-            test Telegram!</p>
+                <div id="g_id_onload" data-context="signin" data-ux_mode="popup" data-callback="handleGoogleResponse" data-auto_prompt="false"></div>
+                <div class="g_id_signin" data-type="standard" data-size="large" data-theme="filled_blue" data-shape="pill" style="margin-top: 10px;"></div>
 
-        <div id="result"></div>
-    </div>
+                <hr style="margin: 18px 0; border: 0; border-top: 1px solid var(--stroke);">
+
+                <h2>Twitter OAuth (PKCE)</h2>
+                <label for="twitterClientId">Twitter Client ID</label>
+                <input id="twitterClientId" value="ZUZQb05IY0FISk5DSU8zdHk1TEc6MTpjaQ" placeholder="Paste your Twitter client id" />
+                <label for="twitterRedirectUri">Twitter Redirect URI</label>
+                <input id="twitterRedirectUri" value="https://mock-frontend-one.vercel.app/" />
+                <div class="row" style="margin-top: 12px;">
+                    <button class="btn btn-twitter" id="twitterLoginBtn">Login with Twitter</button>
+                </div>
+
+                <hr style="margin: 18px 0; border: 0; border-top: 1px solid var(--stroke);">
+
+                <h2>Telegram OAuth</h2>
+                <label for="tgPayload">Paste Telegram payload JSON from widget callback</label>
+                <input id="tgPayload" placeholder='{"id":"...","auth_date":"...","hash":"..."}' />
+                <div class="row" style="margin-top: 12px;">
+                    <button class="btn btn-telegram" id="telegramLoginBtn">Login with Telegram</button>
+                </div>
+            </div>
+        </section>
+
+        <aside class="card">
+            <div class="panel" style="border-top: 0;">
+                <h2>Authentication State</h2>
+                <div id="status" class="status">Waiting for login...</div>
+            </div>
+
+            <div class="panel hidden" id="twoFaLoginPanel">
+                <h2>Step: Complete 2FA Login</h2>
+                <label for="twoFaCode">Authenticator Code</label>
+                <input id="twoFaCode" placeholder="6-digit code" maxlength="6" />
+                <div class="row" style="margin-top: 12px;">
+                    <button class="btn btn-primary" id="twoFaLoginBtn">Finish Login</button>
+                </div>
+            </div>
+
+            <div class="panel hidden" id="twoFaSetupPanel">
+                <h2>Optional: Enable 2FA Now</h2>
+                <div class="row">
+                    <button class="btn btn-outline" id="setupStartBtn">Start 2FA Setup</button>
+                    <button class="btn btn-primary" id="goDashboardBtn">Skip and Go Dashboard</button>
+                </div>
+
+                <div id="setupBox" class="hidden" style="margin-top: 14px;">
+                    <p class="mini" id="setupSecretText"></p>
+                    <img id="setupQr" class="qr hidden" alt="2FA QR Code" />
+                    <label for="setupCode">Enter code to enable 2FA</label>
+                    <input id="setupCode" placeholder="6-digit code" maxlength="6" />
+                    <div class="row" style="margin-top: 12px;">
+                        <button class="btn btn-primary" id="setupVerifyBtn">Verify and Enable</button>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </main>
 
     <script>
-        const API_URL = 'https://anthropometrical-unrepined-elvie.ngrok-free.dev/api/v1';
+        let authToken = null;
+        let currentUser = null;
+        let pending2FaUserId = null;
+        let pendingProvider = null;
+        let pendingNeedsEmail = false;
+        let profileHints = {};
 
-        function showResult(title, data) {
-            const resDiv = document.getElementById('result');
-            resDiv.style.display = 'block';
-            resDiv.innerHTML = `<strong>${title}</strong><br><pre>${JSON.stringify(data, null, 2)}</pre>`;
+        const statusEl = document.getElementById('status');
+        const twoFaLoginPanel = document.getElementById('twoFaLoginPanel');
+        const twoFaSetupPanel = document.getElementById('twoFaSetupPanel');
+        const setupBox = document.getElementById('setupBox');
+        const setupSecretText = document.getElementById('setupSecretText');
+        const setupQr = document.getElementById('setupQr');
+
+        const apiBaseEl = document.getElementById('apiBase');
+        const googleClientIdEl = document.getElementById('googleClientId');
+        const twitterClientIdEl = document.getElementById('twitterClientId');
+        const twitterRedirectUriEl = document.getElementById('twitterRedirectUri');
+        const tgPayloadEl = document.getElementById('tgPayload');
+
+        function apiBase() {
+            return apiBaseEl.value.trim().replace(/\/$/, '');
         }
 
-        // --- GOOGLE ---
-        async function handleGoogleResponse(response) {
-            console.log("Google JWT:", response.credential);
+        function setStatus(message, type = '') {
+            statusEl.className = `status ${type}`.trim();
+            statusEl.textContent = message;
+        }
+
+        async function fetch2FAStatus(token) {
+            const res = await fetch(`${apiBase()}/2fa/status`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+
+            if (!res.ok) {
+                return { enabled: false };
+            }
+
+            return res.json();
+        }
+
+        function b64ToObj(token) {
             try {
-                const res = await fetch(`${API_URL}/auth/oauth/google`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ idToken: response.credential })
-                });
-                const data = await res.json();
-                showResult('Google OAuth Result', data);
-            } catch (err) {
-                showResult('Error', err);
+                const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+                const decoded = atob(base64);
+                return JSON.parse(decoded);
+            } catch {
+                return {};
             }
         }
 
-        // --- TELEGRAM ---
-        async function onTelegramAuth(user) {
-            console.log("Telegram User Data:", user);
-            try {
-                const res = await fetch(`${API_URL}/auth/oauth/telegram`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(user)
-                });
-                const data = await res.json();
-                showResult('Telegram OAuth Result', data);
-            } catch (err) {
-                showResult('Error', err);
+        function storeSessionAndRedirect(nextPage = './dashboard.html') {
+            if (!authToken || !currentUser) {
+                setStatus('No active token/user to continue.', 'danger');
+                return;
             }
+            const profile = {
+                provider: pendingProvider,
+                username: currentUser.username,
+                id: currentUser.id,
+                email: profileHints.email || null,
+                avatarUrl: profileHints.avatarUrl || null,
+                jwtPayload: b64ToObj(authToken),
+            };
+            localStorage.setItem('krabets_session', JSON.stringify({ token: authToken, user: profile }));
+            window.location.href = nextPage;
         }
 
-        // --- TWITTER (PKCE Implementation) ---
-        const TWITTER_CLIENT_ID = "M8F1K3Bp6aYfGQoORqAi2tP3Q";
-        const TWITTER_REDIRECT_URI = `${API_URL}/auth/oauth/twitter`;
-
-        function generateRandomString(length) {
-            const charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~";
-            let result = "";
-            for (let i = 0; i < length; i++) {
-                result += charset.charAt(Math.floor(Math.random() * charset.length));
+        function randomString(length) {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~';
+            let result = '';
+            for (let i = 0; i < length; i += 1) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
             }
             return result;
         }
 
-        async function generateCodeChallenge(codeVerifier) {
-            const encoder = new TextEncoder();
-            const data = encoder.encode(codeVerifier);
-            const digest = await window.crypto.subtle.digest('SHA-256', data);
-            // Base64URL encode
+        async function sha256Base64Url(input) {
+            const bytes = new TextEncoder().encode(input);
+            const digest = await crypto.subtle.digest('SHA-256', bytes);
             return btoa(String.fromCharCode(...new Uint8Array(digest)))
-                .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+                .replace(/\+/g, '-')
+                .replace(/\//g, '_')
+                .replace(/=+$/, '');
         }
 
-        async function startTwitterAuth() {
-            // 1. Generate Verifier & Challenge
-            const codeVerifier = generateRandomString(128);
-            localStorage.setItem('twitter_code_verifier', codeVerifier);
-            const codeChallenge = await generateCodeChallenge(codeVerifier);
+        async function processOAuthResult(provider, res) {
+            const data = await res.json();
+            if (!res.ok) {
+                setStatus(`${provider} login failed:\n${JSON.stringify(data, null, 2)}`, 'danger');
+                return;
+            }
 
-            // 2. Redirect User
-            const authUrl = `https://twitter.com/i/oauth2/authorize?response_type=code&client_id=${TWITTER_CLIENT_ID}&redirect_uri=${TWITTER_REDIRECT_URI}&scope=users.read%20tweet.read&state=state123&code_challenge=${codeChallenge}&code_challenge_method=S256`;
-            window.location.href = authUrl;
+            pendingProvider = provider;
+            if (data.requires2FA) {
+                pending2FaUserId = data.userId;
+                pendingNeedsEmail = !!data.needsEmail;
+                twoFaLoginPanel.classList.remove('hidden');
+                twoFaSetupPanel.classList.add('hidden');
+                setStatus(`${provider} login returned requires2FA=true. Enter your authenticator code to continue.`, 'warn');
+                return;
+            }
+
+            authToken = data.token;
+            currentUser = data.user;
+            pending2FaUserId = null;
+            pendingNeedsEmail = !!data.needsEmail || !data.user?.email;
+            twoFaLoginPanel.classList.add('hidden');
+            twoFaSetupPanel.classList.remove('hidden');
+
+            if (pendingNeedsEmail) {
+                setStatus(`${provider} login successful but email is missing. Redirecting to complete-email page...`, 'warn');
+                storeSessionAndRedirect('./oauth-complete-email.html');
+                return;
+            }
+
+            const status = await fetch2FAStatus(authToken);
+            if (status.enabled) {
+                setStatus(`${provider} login successful. 2FA already enabled. Redirecting to dashboard...`, 'ok');
+                storeSessionAndRedirect();
+                return;
+            }
+
+            setStatus(`${provider} login successful. You can setup 2FA now or continue to dashboard.`, 'ok');
         }
 
-        // --- TWITTER CALLBACK LISTENER ---
-        // If the page loads with ?code=... in the URL, that means Twitter redirected back here!
-        window.onload = async () => {
+        async function handleGoogleResponse(response) {
+            const idToken = response.credential;
+            if (!idToken) {
+                setStatus('Google did not return idToken.', 'danger');
+                return;
+            }
+
+            const decoded = b64ToObj(idToken);
+            profileHints = {
+                email: decoded.email || null,
+                avatarUrl: decoded.picture || null,
+            };
+
+            setStatus('Verifying Google token with backend...', 'warn');
+            const res = await fetch(`${apiBase()}/auth/oauth/google`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ idToken }),
+            });
+            await processOAuthResult('google', res);
+        }
+
+        window.handleGoogleResponse = handleGoogleResponse;
+
+        document.getElementById('twitterLoginBtn').addEventListener('click', async () => {
+            const clientId = twitterClientIdEl.value.trim();
+            const redirectUri = twitterRedirectUriEl.value.trim();
+
+            if (!clientId || !redirectUri) {
+                setStatus('Twitter client id and redirect uri are required.', 'danger');
+                return;
+            }
+
+            const verifier = randomString(128);
+            const challenge = await sha256Base64Url(verifier);
+            localStorage.setItem('krabets_tw_verifier', verifier);
+            localStorage.setItem('krabets_tw_redirect', redirectUri);
+            setStatus('Redirecting to Twitter authorization...', 'warn');
+
+            const url =
+                `https://twitter.com/i/oauth2/authorize?response_type=code` +
+                `&client_id=${encodeURIComponent(clientId)}` +
+                `&redirect_uri=${encodeURIComponent(redirectUri)}` +
+                `&scope=${encodeURIComponent('users.read tweet.read')}` +
+                `&state=krabets-debug` +
+                `&code_challenge=${encodeURIComponent(challenge)}` +
+                `&code_challenge_method=S256`;
+
+            window.location.href = url;
+        });
+
+        document.getElementById('telegramLoginBtn').addEventListener('click', async () => {
+            let payload;
+            try {
+                payload = JSON.parse(tgPayloadEl.value.trim());
+            } catch {
+                setStatus('Invalid Telegram JSON payload.', 'danger');
+                return;
+            }
+
+            profileHints = {
+                email: null,
+                avatarUrl: payload.photo_url || null,
+            };
+
+            setStatus('Sending Telegram payload to backend...', 'warn');
+            const res = await fetch(`${apiBase()}/auth/oauth/telegram`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload),
+            });
+            await processOAuthResult('telegram', res);
+        });
+
+        document.getElementById('twoFaLoginBtn').addEventListener('click', async () => {
+            const code = document.getElementById('twoFaCode').value.trim();
+            if (!pending2FaUserId || !code) {
+                setStatus('2FA userId/code missing.', 'danger');
+                return;
+            }
+
+            setStatus('Completing 2FA login...', 'warn');
+            const res = await fetch(`${apiBase()}/2fa/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId: pending2FaUserId, code }),
+            });
+            const data = await res.json();
+
+            if (!res.ok) {
+                setStatus(`2FA login failed:\n${JSON.stringify(data, null, 2)}`, 'danger');
+                return;
+            }
+
+            authToken = data.token;
+            currentUser = data.user;
+            twoFaLoginPanel.classList.add('hidden');
+            twoFaSetupPanel.classList.remove('hidden');
+
+            if (pendingNeedsEmail || !data.user?.email) {
+                setStatus('2FA login complete but email is missing. Redirecting to complete-email page...', 'warn');
+                storeSessionAndRedirect('./oauth-complete-email.html');
+                return;
+            }
+
+            const status = await fetch2FAStatus(authToken);
+            if (status.enabled) {
+                setStatus('2FA login complete. Redirecting to dashboard...', 'ok');
+                storeSessionAndRedirect();
+                return;
+            }
+
+            setStatus('Login complete. 2FA is not enabled yet, you can setup now or skip for later.', 'warn');
+        });
+
+        document.getElementById('setupStartBtn').addEventListener('click', async () => {
+            if (!authToken) {
+                setStatus('Login first before enabling 2FA.', 'danger');
+                return;
+            }
+
+            setStatus('Requesting 2FA setup secret...', 'warn');
+            const res = await fetch(`${apiBase()}/2fa/setup`, {
+                method: 'POST',
+                headers: { Authorization: `Bearer ${authToken}` },
+            });
+            const data = await res.json();
+
+            if (!res.ok) {
+                setStatus(`2FA setup failed:\n${JSON.stringify(data, null, 2)}`, 'danger');
+                return;
+            }
+
+            setupBox.classList.remove('hidden');
+            setupSecretText.textContent = `Secret: ${data.secret}`;
+            if (data.qrCodeUrl) {
+                setupQr.src = data.qrCodeUrl;
+                setupQr.classList.remove('hidden');
+            }
+            setStatus('2FA setup created. Scan QR/secret and verify with current code.', 'ok');
+        });
+
+        document.getElementById('setupVerifyBtn').addEventListener('click', async () => {
+            const code = document.getElementById('setupCode').value.trim();
+            if (!authToken || !code) {
+                setStatus('Need active token and setup code.', 'danger');
+                return;
+            }
+
+            setStatus('Verifying and enabling 2FA...', 'warn');
+            const res = await fetch(`${apiBase()}/2fa/verify`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${authToken}`,
+                },
+                body: JSON.stringify({ code }),
+            });
+            const data = await res.json();
+
+            if (!res.ok) {
+                setStatus(`2FA verify failed:\n${JSON.stringify(data, null, 2)}`, 'danger');
+                return;
+            }
+
+            setStatus('2FA enabled. Redirecting to dashboard...', 'ok');
+            storeSessionAndRedirect();
+        });
+
+        document.getElementById('goDashboardBtn').addEventListener('click', () => {
+            setStatus('Redirecting to dashboard...', 'ok');
+            storeSessionAndRedirect();
+        });
+
+        async function handleTwitterCallbackIfPresent() {
             const params = new URLSearchParams(window.location.search);
             const code = params.get('code');
-
-            if (code) {
-                const codeVerifier = localStorage.getItem('twitter_code_verifier');
-                history.replaceState(null, '', window.location.pathname); // Clean URL
-
-                try {
-                    const res = await fetch(`${API_URL}/auth/oauth/twitter`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            code: code,
-                            codeVerifier: codeVerifier,
-                            redirectUri: TWITTER_REDIRECT_URI
-                        })
-                    });
-                    const data = await res.json();
-                    showResult('Twitter OAuth Result', data);
-                } catch (err) {
-                    showResult('Error', err);
-                }
+            if (!code) {
+                return;
             }
-        };
+
+            const codeVerifier = localStorage.getItem('krabets_tw_verifier');
+            const redirectUri = localStorage.getItem('krabets_tw_redirect') || twitterRedirectUriEl.value.trim();
+            if (!codeVerifier) {
+                setStatus('Twitter callback found but no code verifier is stored.', 'danger');
+                return;
+            }
+
+            setStatus('Exchanging Twitter code with backend...', 'warn');
+            const res = await fetch(`${apiBase()}/auth/oauth/twitter`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ code, codeVerifier, redirectUri }),
+            });
+            await processOAuthResult('twitter', res);
+
+            const cleanUrl = `${window.location.origin}${window.location.pathname}`;
+            window.history.replaceState({}, '', cleanUrl);
+        }
+
+        function initGoogleClient() {
+            const clientId = googleClientIdEl.value.trim();
+            if (!clientId) {
+                setStatus('Provide Google Client ID to use Google login.', 'warn');
+                return;
+            }
+            const g = document.getElementById('g_id_onload');
+            g.setAttribute('data-client_id', clientId);
+        }
+
+        googleClientIdEl.addEventListener('change', initGoogleClient);
+        initGoogleClient();
+        handleTwitterCallbackIfPresent();
     </script>
-
 </body>
-
 </html>

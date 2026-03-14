@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Krabets Email Auth Lab</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #101a2f;
+            --bg-2: #0f2f3f;
+            --panel: rgba(10, 18, 34, 0.76);
+            --ink: #eaf2ff;
+            --muted: #9fb2cf;
+            --stroke: rgba(185, 208, 245, 0.2);
+            --ok: #67e1a8;
+            --warn: #f1c16d;
+            --danger: #ff8d8d;
+            --cyan: #57c9ff;
+            --teal: #2dcdb4;
+            --blue: #3778f6;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: "Bricolage Grotesque", sans-serif;
+            color: var(--ink);
+            background:
+                radial-gradient(1000px 450px at 80% -15%, rgba(87, 201, 255, 0.28), transparent 60%),
+                radial-gradient(850px 420px at -20% 0%, rgba(45, 205, 180, 0.2), transparent 66%),
+                linear-gradient(155deg, var(--bg), var(--bg-2));
+            padding: 22px;
+        }
+
+        .shell {
+            width: min(1150px, 100%);
+            margin: 0 auto;
+        }
+
+        .top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+        }
+
+        .links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .link {
+            border: 1px solid var(--stroke);
+            color: #d4e7ff;
+            text-decoration: none;
+            border-radius: 999px;
+            padding: 7px 11px;
+            font: 700 12px/1 "Space Mono", monospace;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            background: rgba(8, 15, 28, 0.5);
+        }
+
+        h1 {
+            margin: 4px 0;
+            font-size: clamp(1.5rem, 2.8vw, 2.3rem);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(280px, 1fr));
+            gap: 14px;
+        }
+
+        .card {
+            background: var(--panel);
+            border: 1px solid var(--stroke);
+            border-radius: 18px;
+            padding: 18px;
+            backdrop-filter: blur(8px);
+        }
+
+        .span2 { grid-column: span 2; }
+
+        h2 {
+            margin: 0 0 10px;
+            font-size: 1.1rem;
+        }
+
+        p {
+            margin: 0;
+            color: var(--muted);
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 6px;
+            color: #c5d7f1;
+            font-size: 0.92rem;
+        }
+
+        input {
+            width: 100%;
+            border: 1px solid rgba(196, 219, 250, 0.24);
+            border-radius: 12px;
+            background: rgba(8, 14, 26, 0.76);
+            color: var(--ink);
+            padding: 11px 12px;
+            font: 500 0.94rem/1 "Space Mono", monospace;
+            outline: none;
+        }
+
+        input:focus { border-color: var(--cyan); }
+
+        .row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .btn {
+            border: 0;
+            border-radius: 11px;
+            padding: 10px 12px;
+            cursor: pointer;
+            color: #eef6ff;
+            font: 700 0.83rem/1 "Space Mono", monospace;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .btn-main { background: linear-gradient(135deg, var(--teal), var(--blue)); }
+        .btn-alt { background: #2f4b78; }
+        .btn-ghost { background: transparent; border: 1px solid rgba(180, 207, 245, 0.32); }
+
+        .status {
+            margin-top: 10px;
+            min-height: 44px;
+            border: 1px solid rgba(189, 211, 243, 0.2);
+            border-radius: 12px;
+            padding: 10px 11px;
+            font: 0.84rem/1.45 "Space Mono", monospace;
+            color: #d6e6fb;
+            background: rgba(8, 14, 24, 0.72);
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .ok { border-color: rgba(103, 225, 168, 0.55); }
+        .warn { border-color: rgba(241, 193, 109, 0.55); }
+        .danger { border-color: rgba(255, 141, 141, 0.6); }
+        .hidden { display: none; }
+
+        @media (max-width: 980px) {
+            .grid { grid-template-columns: 1fr; }
+            .span2 { grid-column: span 1; }
+        }
+    </style>
+</head>
+<body>
+    <main class="shell">
+        <div class="top">
+            <div>
+                <h1>Email Auth + 2FA</h1>
+                <p>Complete test flow for signup, verify-email, login, optional 2FA setup, and 2FA login.</p>
+            </div>
+            <nav class="links">
+                <a class="link" href="./index.html">OAuth + 2FA</a>
+                <a class="link" href="./email-auth.html">Email Auth</a>
+                <a class="link" href="./password-reset.html">Reset Password</a>
+                <a class="link" href="./oauth-complete-email.html">Complete OAuth Email</a>
+                <a class="link" href="./dashboard.html">Dashboard</a>
+            </nav>
+        </div>
+
+        <section class="card span2">
+            <label for="apiBase">API Base URL</label>
+            <input id="apiBase" value="http://localhost:4000/api/v1" />
+            <div id="status" class="status">Ready.</div>
+        </section>
+
+        <section class="grid">
+            <article class="card">
+                <h2>1) Signup</h2>
+                <label for="signupUsername">Username</label>
+                <input id="signupUsername" placeholder="new_user" />
+                <label for="signupEmail">Email</label>
+                <input id="signupEmail" placeholder="user@example.com" />
+                <label for="signupPassword">Password</label>
+                <input id="signupPassword" type="password" placeholder="Test@123" />
+                <div class="row">
+                    <button class="btn btn-main" id="signupBtn">Signup</button>
+                </div>
+            </article>
+
+            <article class="card">
+                <h2>2) Verify Email</h2>
+                <label for="verifyEmail">Email</label>
+                <input id="verifyEmail" placeholder="same as signup email" />
+                <label for="verifyCode">OTP Code</label>
+                <input id="verifyCode" maxlength="6" placeholder="6-digit" />
+                <div class="row">
+                    <button class="btn btn-main" id="verifyBtn">Verify Email</button>
+                </div>
+            </article>
+
+            <article class="card">
+                <h2>3) Login</h2>
+                <label for="loginEmail">Email</label>
+                <input id="loginEmail" placeholder="verified email" />
+                <label for="loginPassword">Password</label>
+                <input id="loginPassword" type="password" placeholder="password" />
+                <div class="row">
+                    <button class="btn btn-main" id="loginBtn">Login</button>
+                    <button class="btn btn-ghost" id="toDashboardBtn">Go Dashboard</button>
+                </div>
+            </article>
+
+            <article class="card">
+                <h2>4) If Login Requires 2FA</h2>
+                <label for="login2faCode">Authenticator Code</label>
+                <input id="login2faCode" maxlength="6" placeholder="6-digit" />
+                <div class="row">
+                    <button class="btn btn-alt" id="login2faBtn">Complete 2FA Login</button>
+                </div>
+                <p style="margin-top: 10px;">Use this only after a login response with <code>requires2FA=true</code>.</p>
+            </article>
+
+            <article class="card span2">
+                <h2>5) Optional 2FA Setup (Authenticated)</h2>
+                <div class="row">
+                    <button class="btn btn-main" id="setup2faBtn">Start 2FA Setup</button>
+                </div>
+                <label for="setup2faCode">Verification Code</label>
+                <input id="setup2faCode" maxlength="6" placeholder="6-digit from authenticator" />
+                <div class="row">
+                    <button class="btn btn-alt" id="verify2faBtn">Verify and Enable 2FA</button>
+                </div>
+                <div id="setupInfo" class="status">Setup details appear here.</div>
+            </article>
+        </section>
+    </main>
+
+    <script>
+        let authToken = null;
+        let currentUser = null;
+        let pending2faUserId = null;
+
+        const statusEl = document.getElementById('status');
+        const setupInfoEl = document.getElementById('setupInfo');
+        const apiBaseEl = document.getElementById('apiBase');
+
+        function apiBase() {
+            return apiBaseEl.value.trim().replace(/\/$/, '');
+        }
+
+        function setStatus(msg, type) {
+            statusEl.className = `status ${type || ''}`.trim();
+            statusEl.textContent = msg;
+        }
+
+        function setSetupInfo(msg, type) {
+            setupInfoEl.className = `status ${type || ''}`.trim();
+            setupInfoEl.textContent = msg;
+        }
+
+        function decodeJwt(token) {
+            try {
+                const payload = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+                return JSON.parse(atob(payload));
+            } catch {
+                return {};
+            }
+        }
+
+        async function fetch2FAStatus(token) {
+            const res = await fetch(`${apiBase()}/2fa/status`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+
+            if (!res.ok) {
+                return { enabled: false };
+            }
+
+            return res.json();
+        }
+
+        function saveSessionAndGoDashboard() {
+            if (!authToken || !currentUser) {
+                setStatus('No active session to continue.', 'danger');
+                return;
+            }
+            localStorage.setItem('krabets_session', JSON.stringify({
+                token: authToken,
+                user: {
+                    provider: 'email',
+                    id: currentUser.id,
+                    username: currentUser.username,
+                    email: document.getElementById('loginEmail').value.trim() || null,
+                    avatarUrl: null,
+                    jwtPayload: decodeJwt(authToken),
+                },
+            }));
+            window.location.href = './dashboard.html';
+        }
+
+        function fillCommon(email, password) {
+            if (email) {
+                document.getElementById('verifyEmail').value = email;
+                document.getElementById('loginEmail').value = email;
+            }
+            if (password) {
+                document.getElementById('loginPassword').value = password;
+            }
+        }
+
+        document.getElementById('signupBtn').addEventListener('click', async () => {
+            const username = document.getElementById('signupUsername').value.trim();
+            const email = document.getElementById('signupEmail').value.trim();
+            const password = document.getElementById('signupPassword').value;
+
+            setStatus('Creating account...', 'warn');
+            const res = await fetch(`${apiBase()}/auth/signup`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, email, password }),
+            });
+            const data = await res.json();
+
+            if (!res.ok) {
+                setStatus(`Signup failed:\n${JSON.stringify(data, null, 2)}`, 'danger');
+                return;
+            }
+
+            fillCommon(email, password);
+            setStatus('Signup successful. Check mail/server logs for verify-email OTP.', 'ok');
+        });
+
+        document.getElementById('verifyBtn').addEventListener('click', async () => {
+            const email = document.getElementById('verifyEmail').value.trim();
+            const code = document.getElementById('verifyCode').value.trim();
+
+            setStatus('Verifying email...', 'warn');
+            const res = await fetch(`${apiBase()}/auth/verify-email`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, code }),
+            });
+            const data = await res.json();
+
+            if (!res.ok) {
+                setStatus(`Verify-email failed:\n${JSON.stringify(data, null, 2)}`, 'danger');
+                return;
+            }
+
+            setStatus('Email verification successful.', 'ok');
+        });
+
+        document.getElementById('loginBtn').addEventListener('click', async () => {
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+
+            setStatus('Logging in...', 'warn');
+            const res = await fetch(`${apiBase()}/auth/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password }),
+            });
+            const data = await res.json();
+
+            if (!res.ok) {
+                setStatus(`Login failed:\n${JSON.stringify(data, null, 2)}`, 'danger');
+                return;
+            }
+
+            if (data.requires2FA) {
+                pending2faUserId = data.userId;
+                setStatus('Login requires 2FA. Enter code in "If Login Requires 2FA" section.', 'warn');
+                return;
+            }
+
+            authToken = data.token;
+            currentUser = data.user;
+            pending2faUserId = null;
+
+            const status = await fetch2FAStatus(authToken);
+            if (status.enabled) {
+                setStatus('Login successful. 2FA already enabled for this account. You can continue to dashboard.', 'ok');
+                return;
+            }
+
+            setStatus('Login successful. 2FA is optional now: setup it for stronger security or skip and do it later.', 'warn');
+        });
+
+        document.getElementById('login2faBtn').addEventListener('click', async () => {
+            const code = document.getElementById('login2faCode').value.trim();
+            if (!pending2faUserId) {
+                setStatus('No pending 2FA login. Run login first.', 'danger');
+                return;
+            }
+
+            setStatus('Completing 2FA login...', 'warn');
+            const res = await fetch(`${apiBase()}/2fa/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId: pending2faUserId, code }),
+            });
+            const data = await res.json();
+
+            if (!res.ok) {
+                setStatus(`2FA login failed:\n${JSON.stringify(data, null, 2)}`, 'danger');
+                return;
+            }
+
+            authToken = data.token;
+            currentUser = data.user;
+            pending2faUserId = null;
+            setStatus('2FA login successful.', 'ok');
+        });
+
+        document.getElementById('setup2faBtn').addEventListener('click', async () => {
+            if (!authToken) {
+                setStatus('Login first to start 2FA setup.', 'danger');
+                return;
+            }
+
+            setStatus('Requesting 2FA setup...', 'warn');
+            const res = await fetch(`${apiBase()}/2fa/setup`, {
+                method: 'POST',
+                headers: { Authorization: `Bearer ${authToken}` },
+            });
+            const data = await res.json();
+
+            if (!res.ok) {
+                setStatus(`2FA setup failed:\n${JSON.stringify(data, null, 2)}`, 'danger');
+                return;
+            }
+
+            setSetupInfo(`Secret: ${data.secret}\n\nQR (data url):\n${data.qrCodeUrl || '-'}`, 'ok');
+            setStatus('2FA setup initiated. Enter current TOTP code to verify.', 'ok');
+        });
+
+        document.getElementById('verify2faBtn').addEventListener('click', async () => {
+            const code = document.getElementById('setup2faCode').value.trim();
+            if (!authToken) {
+                setStatus('Login first before 2FA verify.', 'danger');
+                return;
+            }
+
+            setStatus('Verifying 2FA setup...', 'warn');
+            const res = await fetch(`${apiBase()}/2fa/verify`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${authToken}`,
+                },
+                body: JSON.stringify({ code }),
+            });
+            const data = await res.json();
+
+            if (!res.ok) {
+                setStatus(`2FA verify failed:\n${JSON.stringify(data, null, 2)}`, 'danger');
+                return;
+            }
+
+            setStatus('2FA enabled successfully.', 'ok');
+        });
+
+        document.getElementById('toDashboardBtn').addEventListener('click', saveSessionAndGoDashboard);
+    </script>
+</body>
+</html>
