@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Krabets Complete OAuth Email</title>
+    <title>Krabets Complete Email</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -20,7 +20,6 @@
             --danger: #ff8d8d;
             --teal: #2cccb3;
             --blue: #3578f6;
-            --cyan: #56c8ff;
         }
 
         * { box-sizing: border-box; }
@@ -34,22 +33,18 @@
                 radial-gradient(1000px 500px at 85% -20%, rgba(86, 200, 255, 0.24), transparent 60%),
                 radial-gradient(900px 420px at -18% 0%, rgba(44, 204, 179, 0.2), transparent 62%),
                 linear-gradient(155deg, var(--bg), var(--bg-2));
-            padding: 22px;
+            padding: 20px;
         }
 
-        .wrap {
-            width: min(850px, 100%);
-            margin: 0 auto;
-        }
-
-        .links {
+        .top-nav {
+            width: min(760px, 100%);
+            margin: 0 auto 12px;
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
-            margin-bottom: 12px;
         }
 
-        .link {
+        .top-link {
             border: 1px solid var(--stroke);
             color: #d4e7ff;
             text-decoration: none;
@@ -61,24 +56,34 @@
             background: rgba(8, 15, 28, 0.5);
         }
 
+        .shell { width: min(760px, 100%); margin: 0 auto; }
+
         .card {
             background: var(--panel);
             border: 1px solid var(--stroke);
-            border-radius: 18px;
-            padding: 20px;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 20px 45px rgba(4, 10, 20, 0.35);
             backdrop-filter: blur(8px);
         }
 
+        .section {
+            padding: 18px 20px;
+            border-bottom: 1px solid var(--stroke);
+        }
+
+        .section:last-child { border-bottom: 0; }
+
         h1 {
             margin: 0 0 8px;
-            font-size: clamp(1.4rem, 2.5vw, 2.1rem);
+            font-size: clamp(1.35rem, 2.7vw, 1.9rem);
         }
 
         p { margin: 0; color: var(--muted); }
 
         label {
             display: block;
-            margin: 12px 0 6px;
+            margin: 10px 0 6px;
             color: #c6d8f2;
             font-size: 0.92rem;
         }
@@ -86,7 +91,7 @@
         input {
             width: 100%;
             border: 1px solid rgba(196, 219, 250, 0.24);
-            border-radius: 12px;
+            border-radius: 10px;
             background: rgba(8, 14, 26, 0.78);
             color: var(--ink);
             padding: 11px 12px;
@@ -94,10 +99,8 @@
             outline: none;
         }
 
-        input:focus { border-color: var(--cyan); }
-
         .row {
-            margin-top: 12px;
+            margin-top: 10px;
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
@@ -105,23 +108,23 @@
 
         .btn {
             border: 0;
-            border-radius: 11px;
+            border-radius: 10px;
             padding: 10px 12px;
             cursor: pointer;
             color: #eff7ff;
-            font: 700 0.83rem/1 "Space Mono", monospace;
+            font: 700 0.82rem/1 "Space Mono", monospace;
             text-transform: uppercase;
-            letter-spacing: 0.06em;
+            letter-spacing: 0.05em;
         }
 
         .btn-main { background: linear-gradient(135deg, var(--teal), var(--blue)); }
         .btn-ghost { background: transparent; border: 1px solid rgba(180, 207, 245, 0.32); }
 
         .status {
-            margin-top: 12px;
-            min-height: 48px;
+            margin-top: 10px;
+            min-height: 44px;
             border: 1px solid rgba(189, 211, 243, 0.2);
-            border-radius: 12px;
+            border-radius: 10px;
             padding: 10px 11px;
             font: 0.84rem/1.45 "Space Mono", monospace;
             color: #d6e5fb;
@@ -135,37 +138,49 @@
         .danger { border-color: rgba(255, 141, 141, 0.62); }
 
         .hidden { display: none; }
+
+        details {
+            border: 1px solid var(--stroke);
+            border-radius: 10px;
+            padding: 10px;
+            background: rgba(7, 13, 26, 0.45);
+        }
+
+        summary {
+            cursor: pointer;
+            font: 700 0.83rem/1 "Space Mono", monospace;
+            letter-spacing: 0.04em;
+        }
     </style>
 </head>
 <body>
-    <main class="wrap">
-        <nav class="links">
-            <a class="link" href="./index.html">OAuth + 2FA</a>
-            <a class="link" href="./email-auth.html">Email Auth</a>
-            <a class="link" href="./password-reset.html">Reset Password</a>
-            <a class="link" href="./oauth-complete-email.html">Complete OAuth Email</a>
-            <a class="link" href="./dashboard.html">Dashboard</a>
-        </nav>
+    <nav class="top-nav">
+        <a class="top-link" href="./index.html">Sign In</a>
+        <a class="top-link" href="./email-auth.html">Sign Up</a>
+        <a class="top-link" href="./password-reset.html">Forgot Password</a>
+        <a class="top-link" href="./dashboard.html">Dashboard</a>
+    </nav>
 
+    <main class="shell">
         <section class="card">
-            <h1>Complete OAuth Signup</h1>
-            <p>Your OAuth login succeeded, but we do not have your email yet. Add it once and continue. This route auto-marks email verified for OAuth accounts.</p>
-
-            <label for="apiBase">API Base URL</label>
-            <input id="apiBase" value="http://localhost:4000/api/v1" />
-
-            <label for="email">Email</label>
-            <input id="email" placeholder="you@example.com" />
-
-            <div class="row">
-                <button class="btn btn-main" id="saveBtn">Save Email</button>
-                <button class="btn btn-ghost" id="dashboardBtn">Go Dashboard</button>
+            <div class="section">
+                <h1>Complete Your Account</h1>
+                <p>We need your email to finish account setup for this OAuth sign-in.</p>
             </div>
 
-            <section id="setupPanel" class="hidden" style="margin-top: 12px;">
-                <p style="margin-bottom: 8px; color: var(--muted);">Email saved. Setup 2FA now (recommended) or skip and do it later.</p>
+            <div class="section">
+                <label for="email">Email</label>
+                <input id="email" placeholder="you@example.com" />
                 <div class="row">
-                    <button class="btn btn-main" id="start2faBtn">Setup 2FA Now</button>
+                    <button class="btn btn-main" id="saveBtn">Save Email</button>
+                    <button class="btn btn-ghost" id="dashboardBtn">Skip to Dashboard</button>
+                </div>
+            </div>
+
+            <div class="section hidden" id="setupPanel">
+                <p style="color: var(--muted);">2FA setup is optional now. Setup now or skip.</p>
+                <div class="row">
+                    <button class="btn btn-main" id="start2faBtn">Setup 2FA</button>
                     <button class="btn btn-ghost" id="skip2faBtn">Skip For Now</button>
                 </div>
 
@@ -174,12 +189,23 @@
                     <label for="setupCode">Authenticator Code</label>
                     <input id="setupCode" maxlength="6" placeholder="6-digit code" />
                     <div class="row">
-                        <button class="btn btn-main" id="verify2faBtn">Verify and Enable 2FA</button>
+                        <button class="btn btn-main" id="verify2faBtn">Enable 2FA</button>
                     </div>
                 </div>
-            </section>
+            </div>
 
-            <div id="status" class="status">Waiting for input...</div>
+            <div class="section">
+                <h2 style="margin: 0 0 8px; font-size: 1rem;">Status</h2>
+                <div id="status" class="status">Waiting for input...</div>
+            </div>
+
+            <div class="section">
+                <details>
+                    <summary>Advanced Settings</summary>
+                    <label for="apiBase">API Base URL</label>
+                    <input id="apiBase" value="https://anthropometrical-unrepined-elvie.ngrok-free.dev/api/v1" />
+                </details>
+            </div>
         </section>
     </main>
 
@@ -202,20 +228,13 @@
         function loadSession() {
             const raw = localStorage.getItem('krabets_session');
             if (!raw) return null;
-            try {
-                return JSON.parse(raw);
-            } catch {
-                return null;
-            }
+            try { return JSON.parse(raw); } catch { return null; }
         }
 
         async function updateSessionUser(partialUser) {
             const session = loadSession();
             if (!session) return;
-            session.user = {
-                ...(session.user || {}),
-                ...(partialUser || {}),
-            };
+            session.user = { ...(session.user || {}), ...(partialUser || {}) };
             localStorage.setItem('krabets_session', JSON.stringify(session));
         }
 
@@ -224,10 +243,9 @@
             const email = document.getElementById('email').value.trim().toLowerCase();
 
             if (!session?.token) {
-                setStatus('No logged-in OAuth session found. Login first from OAuth page.', 'danger');
+                setStatus('No logged-in OAuth session found. Sign in first.', 'danger');
                 return;
             }
-
             if (!email) {
                 setStatus('Email is required.', 'danger');
                 return;
@@ -251,7 +269,7 @@
 
             await updateSessionUser(data.user || { email });
             setupPanelEl.classList.remove('hidden');
-            setStatus('Email saved successfully. You can setup 2FA now or skip for now.', 'ok');
+            setStatus('Email saved. Setup 2FA now or skip.', 'ok');
         });
 
         document.getElementById('start2faBtn').addEventListener('click', async () => {
@@ -261,12 +279,10 @@
                 return;
             }
 
-            setStatus('Requesting 2FA setup...', 'warn');
+            setStatus('Creating 2FA setup...', 'warn');
             const res = await fetch(`${apiBase()}/2fa/setup`, {
                 method: 'POST',
-                headers: {
-                    Authorization: `Bearer ${session.token}`,
-                },
+                headers: { Authorization: `Bearer ${session.token}` },
             });
             const data = await res.json();
 
@@ -277,7 +293,7 @@
 
             setupBoxEl.classList.remove('hidden');
             setupDetailsEl.textContent = `Secret: ${data.secret}\n\nQR (data url):\n${data.qrCodeUrl || '-'}`;
-            setStatus('2FA setup created. Scan secret/QR and verify with current code.', 'ok');
+            setStatus('Enter authenticator code to enable 2FA.', 'ok');
         });
 
         document.getElementById('verify2faBtn').addEventListener('click', async () => {
@@ -288,7 +304,7 @@
                 return;
             }
 
-            setStatus('Verifying 2FA setup...', 'warn');
+            setStatus('Enabling 2FA...', 'warn');
             const res = await fetch(`${apiBase()}/2fa/verify`, {
                 method: 'POST',
                 headers: {
@@ -304,10 +320,8 @@
                 return;
             }
 
-            setStatus('2FA enabled successfully. Redirecting to dashboard...', 'ok');
-            setTimeout(() => {
-                window.location.href = './dashboard.html';
-            }, 500);
+            setStatus('2FA enabled. Redirecting...', 'ok');
+            setTimeout(() => { window.location.href = './dashboard.html'; }, 500);
         });
 
         document.getElementById('skip2faBtn').addEventListener('click', () => {

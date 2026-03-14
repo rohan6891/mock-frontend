@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Krabets Email Auth Lab</title>
+    <title>Krabets Email Auth</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -11,14 +11,13 @@
         :root {
             --bg: #101a2f;
             --bg-2: #0f2f3f;
-            --panel: rgba(10, 18, 34, 0.76);
+            --panel: rgba(10, 18, 34, 0.78);
             --ink: #eaf2ff;
             --muted: #9fb2cf;
-            --stroke: rgba(185, 208, 245, 0.2);
+            --stroke: rgba(185, 208, 245, 0.22);
             --ok: #67e1a8;
             --warn: #f1c16d;
             --danger: #ff8d8d;
-            --cyan: #57c9ff;
             --teal: #2dcdb4;
             --blue: #3778f6;
         }
@@ -34,30 +33,18 @@
                 radial-gradient(1000px 450px at 80% -15%, rgba(87, 201, 255, 0.28), transparent 60%),
                 radial-gradient(850px 420px at -20% 0%, rgba(45, 205, 180, 0.2), transparent 66%),
                 linear-gradient(155deg, var(--bg), var(--bg-2));
-            padding: 22px;
+            padding: 20px;
         }
 
-        .shell {
-            width: min(1150px, 100%);
-            margin: 0 auto;
-        }
-
-        .top {
+        .top-nav {
+            width: min(760px, 100%);
+            margin: 0 auto 12px;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 14px;
-            flex-wrap: wrap;
-        }
-
-        .links {
-            display: flex;
-            flex-wrap: wrap;
             gap: 8px;
+            flex-wrap: wrap;
         }
 
-        .link {
+        .top-link {
             border: 1px solid var(--stroke);
             color: #d4e7ff;
             text-decoration: none;
@@ -69,36 +56,62 @@
             background: rgba(8, 15, 28, 0.5);
         }
 
-        h1 {
-            margin: 4px 0;
-            font-size: clamp(1.5rem, 2.8vw, 2.3rem);
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(280px, 1fr));
-            gap: 14px;
+        .shell {
+            width: min(760px, 100%);
+            margin: 0 auto;
         }
 
         .card {
             background: var(--panel);
             border: 1px solid var(--stroke);
-            border-radius: 18px;
-            padding: 18px;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 20px 45px rgba(4, 10, 20, 0.35);
             backdrop-filter: blur(8px);
         }
 
-        .span2 { grid-column: span 2; }
-
-        h2 {
-            margin: 0 0 10px;
-            font-size: 1.1rem;
+        .header {
+            padding: 20px;
+            border-bottom: 1px solid var(--stroke);
         }
 
-        p {
-            margin: 0;
-            color: var(--muted);
+        h1 {
+            margin: 0 0 8px;
+            font-size: clamp(1.35rem, 2.7vw, 1.9rem);
         }
+
+        p { margin: 0; color: var(--muted); }
+
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .tab {
+            border: 1px solid rgba(180, 207, 245, 0.32);
+            background: transparent;
+            color: #d8ebff;
+            border-radius: 999px;
+            padding: 8px 12px;
+            cursor: pointer;
+            font: 700 12px/1 "Space Mono", monospace;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, var(--teal), var(--blue));
+            border-color: transparent;
+            color: #fff;
+        }
+
+        .section {
+            padding: 18px 20px;
+            border-bottom: 1px solid var(--stroke);
+        }
+
+        .section:last-child { border-bottom: 0; }
 
         label {
             display: block;
@@ -110,15 +123,13 @@
         input {
             width: 100%;
             border: 1px solid rgba(196, 219, 250, 0.24);
-            border-radius: 12px;
+            border-radius: 10px;
             background: rgba(8, 14, 26, 0.76);
             color: var(--ink);
             padding: 11px 12px;
             font: 500 0.94rem/1 "Space Mono", monospace;
             outline: none;
         }
-
-        input:focus { border-color: var(--cyan); }
 
         .row {
             display: flex;
@@ -129,13 +140,13 @@
 
         .btn {
             border: 0;
-            border-radius: 11px;
+            border-radius: 10px;
             padding: 10px 12px;
             cursor: pointer;
             color: #eef6ff;
-            font: 700 0.83rem/1 "Space Mono", monospace;
+            font: 700 0.82rem/1 "Space Mono", monospace;
             text-transform: uppercase;
-            letter-spacing: 0.06em;
+            letter-spacing: 0.05em;
         }
 
         .btn-main { background: linear-gradient(135deg, var(--teal), var(--blue)); }
@@ -146,7 +157,7 @@
             margin-top: 10px;
             min-height: 44px;
             border: 1px solid rgba(189, 211, 243, 0.2);
-            border-radius: 12px;
+            border-radius: 10px;
             padding: 10px 11px;
             font: 0.84rem/1.45 "Space Mono", monospace;
             color: #d6e6fb;
@@ -160,93 +171,105 @@
         .danger { border-color: rgba(255, 141, 141, 0.6); }
         .hidden { display: none; }
 
-        @media (max-width: 980px) {
-            .grid { grid-template-columns: 1fr; }
-            .span2 { grid-column: span 1; }
+        details {
+            border: 1px solid var(--stroke);
+            border-radius: 10px;
+            padding: 10px;
+            background: rgba(7, 13, 26, 0.45);
+        }
+
+        summary {
+            cursor: pointer;
+            font: 700 0.83rem/1 "Space Mono", monospace;
+            letter-spacing: 0.04em;
         }
     </style>
 </head>
 <body>
+    <nav class="top-nav">
+        <a class="top-link" href="./index.html">Sign In</a>
+        <a class="top-link" href="./email-auth.html">Sign Up</a>
+        <a class="top-link" href="./password-reset.html">Forgot Password</a>
+        <a class="top-link" href="./dashboard.html">Dashboard</a>
+    </nav>
+
     <main class="shell">
-        <div class="top">
-            <div>
-                <h1>Email Auth + 2FA</h1>
-                <p>Complete test flow for signup, verify-email, login, optional 2FA setup, and 2FA login.</p>
+        <section class="card">
+            <div class="header">
+                <h1>Email Authentication</h1>
+                <p>Create account, verify email, then sign in. Social sign-in is available on the Sign In page.</p>
+                <div class="tabs">
+                    <button class="tab active" id="signupTab">Sign Up</button>
+                    <button class="tab" id="signinTab">Sign In</button>
+                </div>
             </div>
-            <nav class="links">
-                <a class="link" href="./index.html">OAuth + 2FA</a>
-                <a class="link" href="./email-auth.html">Email Auth</a>
-                <a class="link" href="./password-reset.html">Reset Password</a>
-                <a class="link" href="./oauth-complete-email.html">Complete OAuth Email</a>
-                <a class="link" href="./dashboard.html">Dashboard</a>
-            </nav>
-        </div>
 
-        <section class="card span2">
-            <label for="apiBase">API Base URL</label>
-            <input id="apiBase" value="http://localhost:4000/api/v1" />
-            <div id="status" class="status">Ready.</div>
-        </section>
-
-        <section class="grid">
-            <article class="card">
-                <h2>1) Signup</h2>
+            <div class="section" id="signupPanel">
                 <label for="signupUsername">Username</label>
                 <input id="signupUsername" placeholder="new_user" />
                 <label for="signupEmail">Email</label>
                 <input id="signupEmail" placeholder="user@example.com" />
                 <label for="signupPassword">Password</label>
-                <input id="signupPassword" type="password" placeholder="Test@123" />
+                <input id="signupPassword" type="password" placeholder="StrongPassword@123" />
                 <div class="row">
-                    <button class="btn btn-main" id="signupBtn">Signup</button>
+                    <button class="btn btn-main" id="signupBtn">Create Account</button>
                 </div>
-            </article>
 
-            <article class="card">
-                <h2>2) Verify Email</h2>
-                <label for="verifyEmail">Email</label>
-                <input id="verifyEmail" placeholder="same as signup email" />
-                <label for="verifyCode">OTP Code</label>
-                <input id="verifyCode" maxlength="6" placeholder="6-digit" />
+                <label for="verifyCode">Email Verification Code</label>
+                <input id="verifyCode" maxlength="6" placeholder="6-digit code" />
                 <div class="row">
-                    <button class="btn btn-main" id="verifyBtn">Verify Email</button>
+                    <button class="btn btn-alt" id="verifyBtn">Verify Email</button>
                 </div>
-            </article>
+            </div>
 
-            <article class="card">
-                <h2>3) Login</h2>
+            <div class="section hidden" id="signinPanel">
                 <label for="loginEmail">Email</label>
                 <input id="loginEmail" placeholder="verified email" />
                 <label for="loginPassword">Password</label>
                 <input id="loginPassword" type="password" placeholder="password" />
                 <div class="row">
-                    <button class="btn btn-main" id="loginBtn">Login</button>
-                    <button class="btn btn-ghost" id="toDashboardBtn">Go Dashboard</button>
+                    <button class="btn btn-main" id="loginBtn">Sign In</button>
+                    <button class="btn btn-ghost" id="toDashboardBtn">Continue</button>
                 </div>
-            </article>
 
-            <article class="card">
-                <h2>4) If Login Requires 2FA</h2>
-                <label for="login2faCode">Authenticator Code</label>
-                <input id="login2faCode" maxlength="6" placeholder="6-digit" />
-                <div class="row">
-                    <button class="btn btn-alt" id="login2faBtn">Complete 2FA Login</button>
+                <div id="login2faBox" class="hidden" style="margin-top: 12px;">
+                    <label for="login2faCode">2FA Code</label>
+                    <input id="login2faCode" maxlength="6" placeholder="6-digit code" />
+                    <div class="row">
+                        <button class="btn btn-alt" id="login2faBtn">Verify 2FA</button>
+                    </div>
                 </div>
-                <p style="margin-top: 10px;">Use this only after a login response with <code>requires2FA=true</code>.</p>
-            </article>
+            </div>
 
-            <article class="card span2">
-                <h2>5) Optional 2FA Setup (Authenticated)</h2>
+            <div class="section hidden" id="setupPanel">
+                <p style="color: var(--muted);">2FA is optional right now. You can setup now or skip.</p>
                 <div class="row">
-                    <button class="btn btn-main" id="setup2faBtn">Start 2FA Setup</button>
+                    <button class="btn btn-main" id="setup2faBtn">Setup 2FA</button>
+                    <button class="btn btn-ghost" id="skip2faBtn">Skip for Now</button>
                 </div>
-                <label for="setup2faCode">Verification Code</label>
-                <input id="setup2faCode" maxlength="6" placeholder="6-digit from authenticator" />
-                <div class="row">
-                    <button class="btn btn-alt" id="verify2faBtn">Verify and Enable 2FA</button>
+
+                <div id="setupFlow" class="hidden" style="margin-top: 12px;">
+                    <div id="setupInfo" class="status"></div>
+                    <label for="setup2faCode">Authenticator Code</label>
+                    <input id="setup2faCode" maxlength="6" placeholder="6-digit code" />
+                    <div class="row">
+                        <button class="btn btn-alt" id="verify2faBtn">Enable 2FA</button>
+                    </div>
                 </div>
-                <div id="setupInfo" class="status">Setup details appear here.</div>
-            </article>
+            </div>
+
+            <div class="section">
+                <h2 style="margin: 0 0 8px; font-size: 1rem;">Status</h2>
+                <div id="status" class="status">Ready.</div>
+            </div>
+
+            <div class="section">
+                <details>
+                    <summary>Advanced Settings</summary>
+                    <label for="apiBase">API Base URL</label>
+                    <input id="apiBase" value="https://anthropometrical-unrepined-elvie.ngrok-free.dev/api/v1" />
+                </details>
+            </div>
         </section>
     </main>
 
@@ -258,6 +281,11 @@
         const statusEl = document.getElementById('status');
         const setupInfoEl = document.getElementById('setupInfo');
         const apiBaseEl = document.getElementById('apiBase');
+        const signupPanel = document.getElementById('signupPanel');
+        const signinPanel = document.getElementById('signinPanel');
+        const setupPanel = document.getElementById('setupPanel');
+        const login2faBox = document.getElementById('login2faBox');
+        const setupFlow = document.getElementById('setupFlow');
 
         function apiBase() {
             return apiBaseEl.value.trim().replace(/\/$/, '');
@@ -266,11 +294,6 @@
         function setStatus(msg, type) {
             statusEl.className = `status ${type || ''}`.trim();
             statusEl.textContent = msg;
-        }
-
-        function setSetupInfo(msg, type) {
-            setupInfoEl.className = `status ${type || ''}`.trim();
-            setupInfoEl.textContent = msg;
         }
 
         function decodeJwt(token) {
@@ -286,17 +309,13 @@
             const res = await fetch(`${apiBase()}/2fa/status`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
-
-            if (!res.ok) {
-                return { enabled: false };
-            }
-
+            if (!res.ok) return { enabled: false };
             return res.json();
         }
 
         function saveSessionAndGoDashboard() {
             if (!authToken || !currentUser) {
-                setStatus('No active session to continue.', 'danger');
+                setStatus('No active session.', 'danger');
                 return;
             }
             localStorage.setItem('krabets_session', JSON.stringify({
@@ -305,7 +324,7 @@
                     provider: 'email',
                     id: currentUser.id,
                     username: currentUser.username,
-                    email: document.getElementById('loginEmail').value.trim() || null,
+                    email: currentUser.email || document.getElementById('loginEmail').value.trim() || null,
                     avatarUrl: null,
                     jwtPayload: decodeJwt(authToken),
                 },
@@ -313,15 +332,22 @@
             window.location.href = './dashboard.html';
         }
 
-        function fillCommon(email, password) {
-            if (email) {
-                document.getElementById('verifyEmail').value = email;
-                document.getElementById('loginEmail').value = email;
-            }
-            if (password) {
-                document.getElementById('loginPassword').value = password;
-            }
+        function showSignUp() {
+            document.getElementById('signupTab').classList.add('active');
+            document.getElementById('signinTab').classList.remove('active');
+            signupPanel.classList.remove('hidden');
+            signinPanel.classList.add('hidden');
         }
+
+        function showSignIn() {
+            document.getElementById('signinTab').classList.add('active');
+            document.getElementById('signupTab').classList.remove('active');
+            signinPanel.classList.remove('hidden');
+            signupPanel.classList.add('hidden');
+        }
+
+        document.getElementById('signupTab').addEventListener('click', showSignUp);
+        document.getElementById('signinTab').addEventListener('click', showSignIn);
 
         document.getElementById('signupBtn').addEventListener('click', async () => {
             const username = document.getElementById('signupUsername').value.trim();
@@ -341,12 +367,13 @@
                 return;
             }
 
-            fillCommon(email, password);
-            setStatus('Signup successful. Check mail/server logs for verify-email OTP.', 'ok');
+            document.getElementById('loginEmail').value = email;
+            document.getElementById('loginPassword').value = password;
+            setStatus('Account created. Check email for verification code.', 'ok');
         });
 
         document.getElementById('verifyBtn').addEventListener('click', async () => {
-            const email = document.getElementById('verifyEmail').value.trim();
+            const email = document.getElementById('signupEmail').value.trim();
             const code = document.getElementById('verifyCode').value.trim();
 
             setStatus('Verifying email...', 'warn');
@@ -362,14 +389,15 @@
                 return;
             }
 
-            setStatus('Email verification successful.', 'ok');
+            setStatus('Email verified. You can sign in now.', 'ok');
+            showSignIn();
         });
 
         document.getElementById('loginBtn').addEventListener('click', async () => {
             const email = document.getElementById('loginEmail').value.trim();
             const password = document.getElementById('loginPassword').value;
 
-            setStatus('Logging in...', 'warn');
+            setStatus('Signing in...', 'warn');
             const res = await fetch(`${apiBase()}/auth/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -384,31 +412,35 @@
 
             if (data.requires2FA) {
                 pending2faUserId = data.userId;
-                setStatus('Login requires 2FA. Enter code in "If Login Requires 2FA" section.', 'warn');
+                login2faBox.classList.remove('hidden');
+                setStatus('2FA required. Enter code to continue.', 'warn');
                 return;
             }
 
             authToken = data.token;
             currentUser = data.user;
             pending2faUserId = null;
+            login2faBox.classList.add('hidden');
 
-            const status = await fetch2FAStatus(authToken);
-            if (status.enabled) {
-                setStatus('Login successful. 2FA already enabled for this account. You can continue to dashboard.', 'ok');
+            const tfa = await fetch2FAStatus(authToken);
+            setupPanel.classList.remove('hidden');
+
+            if (tfa.enabled) {
+                setStatus('Sign in successful. 2FA already enabled. Continue to dashboard.', 'ok');
                 return;
             }
 
-            setStatus('Login successful. 2FA is optional now: setup it for stronger security or skip and do it later.', 'warn');
+            setStatus('Sign in successful. Setup 2FA now or skip.', 'ok');
         });
 
         document.getElementById('login2faBtn').addEventListener('click', async () => {
             const code = document.getElementById('login2faCode').value.trim();
             if (!pending2faUserId) {
-                setStatus('No pending 2FA login. Run login first.', 'danger');
+                setStatus('No pending 2FA session.', 'danger');
                 return;
             }
 
-            setStatus('Completing 2FA login...', 'warn');
+            setStatus('Verifying 2FA...', 'warn');
             const res = await fetch(`${apiBase()}/2fa/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -424,16 +456,18 @@
             authToken = data.token;
             currentUser = data.user;
             pending2faUserId = null;
-            setStatus('2FA login successful.', 'ok');
+            login2faBox.classList.add('hidden');
+            setupPanel.classList.remove('hidden');
+            setStatus('2FA verified. Setup 2FA now or skip for later.', 'ok');
         });
 
         document.getElementById('setup2faBtn').addEventListener('click', async () => {
             if (!authToken) {
-                setStatus('Login first to start 2FA setup.', 'danger');
+                setStatus('Sign in first.', 'danger');
                 return;
             }
 
-            setStatus('Requesting 2FA setup...', 'warn');
+            setStatus('Creating 2FA setup...', 'warn');
             const res = await fetch(`${apiBase()}/2fa/setup`, {
                 method: 'POST',
                 headers: { Authorization: `Bearer ${authToken}` },
@@ -445,18 +479,19 @@
                 return;
             }
 
-            setSetupInfo(`Secret: ${data.secret}\n\nQR (data url):\n${data.qrCodeUrl || '-'}`, 'ok');
-            setStatus('2FA setup initiated. Enter current TOTP code to verify.', 'ok');
+            setupFlow.classList.remove('hidden');
+            setupInfoEl.textContent = `Secret: ${data.secret}\n\nQR (data url):\n${data.qrCodeUrl || '-'}`;
+            setStatus('Scan with authenticator and enter code.', 'ok');
         });
 
         document.getElementById('verify2faBtn').addEventListener('click', async () => {
             const code = document.getElementById('setup2faCode').value.trim();
-            if (!authToken) {
-                setStatus('Login first before 2FA verify.', 'danger');
+            if (!authToken || !code) {
+                setStatus('Need active session and code.', 'danger');
                 return;
             }
 
-            setStatus('Verifying 2FA setup...', 'warn');
+            setStatus('Enabling 2FA...', 'warn');
             const res = await fetch(`${apiBase()}/2fa/verify`, {
                 method: 'POST',
                 headers: {
@@ -472,9 +507,10 @@
                 return;
             }
 
-            setStatus('2FA enabled successfully.', 'ok');
+            setStatus('2FA enabled. Continue to dashboard.', 'ok');
         });
 
+        document.getElementById('skip2faBtn').addEventListener('click', saveSessionAndGoDashboard);
         document.getElementById('toDashboardBtn').addEventListener('click', saveSessionAndGoDashboard);
     </script>
 </body>
