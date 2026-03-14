@@ -196,9 +196,7 @@
                 `&client_id=${TWITTER_CLIENT_ID}` +
                 `&redirect_uri=${encodeURIComponent(TWITTER_REDIRECT_URI)}` +
                 `&scope=users.read%20tweet.read` +
-                `&state=debug123` +
-                `&code_challenge=${codeChallenge}` +
-                `&code_challenge_method=S256`;
+                `&state=debug123`;
 
             console.log("Authorization URL:");
             console.log(authUrl);
